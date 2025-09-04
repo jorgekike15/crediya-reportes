@@ -22,6 +22,7 @@ public class SqsMessageListener {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode json = mapper.readTree(messageBody);
             String decision = json.get("message").asText();
+            Double monto = json.get("message2").asDouble();
 
             log.info("decision recibida: {}", decision);
 
@@ -29,7 +30,7 @@ public class SqsMessageListener {
                 String id = "1";
                 log.info("Incrementando prestamos aprobados para el reporte ");
 
-                reporteRepository.incrementarContador(id)
+                reporteRepository.incrementarContador(id, monto)
                         .doOnSuccess(unused -> log.info("Contador actualizado en DynamoDB"))
                         .doOnError(error -> log.error("Error actualizando contador: {}", error.getMessage(), error))
                         .subscribe();

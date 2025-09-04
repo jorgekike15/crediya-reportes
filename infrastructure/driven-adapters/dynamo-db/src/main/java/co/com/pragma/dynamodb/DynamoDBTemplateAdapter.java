@@ -42,15 +42,20 @@ public class DynamoDBTemplateAdapter extends TemplateAdapterOperations<Reporte,
     }
 
     @Override
-    public Mono<Void> incrementarContador(String id) {
+    public Mono<Void> incrementarContador(String id, Double monto) {
         return Mono.fromFuture(
                 dynamoDbAsyncClient.updateItem(builder -> builder
                         .tableName("Reportes")
                         .key(Map.of("id", AttributeValue.builder().s(id).build()))
-                        .updateExpression("SET solicitudesAprobadas = if_not_exists(solicitudesAprobadas, :zero) + :inc")
+                        .updateExpression(
+                                "SET solicitudesAprobadas = if_not_exists(solicitudesAprobadas, :zero) + :inc, " +
+                                        "montoSolicitudesAprobadas = if_not_exists(montoSolicitudesAprobadas, :zeroMonto) + :monto"
+                        )
                         .expressionAttributeValues(Map.of(
                                 ":inc", AttributeValue.builder().n("1").build(),
-                                ":zero", AttributeValue.builder().n("0").build()
+                                ":zero", AttributeValue.builder().n("0").build(),
+                                ":monto", AttributeValue.builder().n(String.valueOf(monto)).build(),
+                                ":zeroMonto", AttributeValue.builder().n("0").build()
                         ))
                 )
         ).then();

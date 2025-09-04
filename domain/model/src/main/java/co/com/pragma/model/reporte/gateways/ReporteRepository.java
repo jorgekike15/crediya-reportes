@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 public interface ReporteRepository {
 
     Mono<Reporte> generateReport();
-    Mono<Void> incrementarContador(String id);
+    Mono<Void> incrementarContador(String id, Double monto);
 }
