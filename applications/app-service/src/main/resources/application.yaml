@@ -1,21 +1,21 @@
 server:
   port: 8081
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret: "1ca67cbccbbcba715a9dd252fc221741ef808143ba94d7b01d717b0389bd4ea4f680250033cfd457d1d0a1c9a79046bde8771a1d24345a3b63695787b466be2d"
   application:
     name: "crediya-reportes"
   devtools:
     add-properties: false
-  h2:
-    console:
-      enabled: true
-      path: "/h2"
   profiles:
-    include: null
+    active: local
 adapter:
   sqs:
-    region: "us-east-1"
-    queueUrl: "http://localhost:4566/000000000000/sample"
-    endpoint: "http://localhost:4566 # For localstack only"
+    region: "us-east-2"
+    queue-contador-solicitudes-response: "contadorSolicitudesSQS"
 management:
   endpoints:
     web:
@@ -27,3 +27,7 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+aws:
+  dynamodb:
+    endpoint: "https://dynamodb.us-east-2.amazonaws.com"
+    table-name: "Reportes"
